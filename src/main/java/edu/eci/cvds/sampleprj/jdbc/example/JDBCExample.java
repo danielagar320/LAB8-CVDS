@@ -137,13 +137,24 @@ public class JDBCExample {
      * @return el costo total del pedido (suma de: cantidades*precios)
      */
     public static int valorTotalPedido(Connection con, int codigoPedido){
+        int value = 0;
+        String query = "SELECT SUM(ORD_PRODUCTOS.precio * ORD_DETALLE.PEDIDO.cantidad) AS res FROM ORD_DETAL";
         
         //Crear prepared statement
-        //asignar parámetros
-        //usar executeQuery
-        //Sacar resultado del ResultSet
-        
-        return 0;
+        try(PreparedStatement statement = con.prepareStatement(query)) {
+            //asignar parámetros
+            nombresPedido.setInt(1, codigoPedido);
+            //usar executeQuery
+            ResultSet res = statement.executeQuery();
+            
+            //Sacar resultado del ResultSet
+            while (res.next()) {
+                value = res.getInt("res");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return value;
     }
     
 
