@@ -12,7 +12,7 @@ import edu.eci.cvds.samples.entities.Cliente;
  */
 public interface ClienteMapper {
     
-    public Cliente consultarCliente(int id); 
+    public Cliente consultarCliente(@Param("idcli") int id); 
     
     /**
      * Registrar un nuevo item rentado asociado al cliente identificado
@@ -22,10 +22,12 @@ public interface ClienteMapper {
      * @param fechainicio
      * @param fechafin 
      */
-    public void agregarItemRentadoACliente(int id, 
-            int idit, 
-            Date fechainicio,
-            Date fechafin);
+	 
+	 
+    public void agregarItemRentadoACliente(@Param("id") int id, 
+        @Param("idit") int idit, 
+        @Param("fechaInicio") Date fechainicio,
+        @Param("fechaFin") Date fechafin);
 
     /**
      * Consultar todos los clientes
