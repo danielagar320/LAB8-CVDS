@@ -179,7 +179,7 @@ public class ServiciosAlquilerItemsStub implements ServiciosAlquiler {
 			return diasRetraso*MULTA_DIARIA; 
 		} 
 	} 
-	
+	// 
 	@Override    
 	public long consultarCostoAlquiler(int iditem, int numdias) throws ExcepcionServiciosAlquiler {
         if (!itemsDisponibles.containsKey(iditem)) {            
