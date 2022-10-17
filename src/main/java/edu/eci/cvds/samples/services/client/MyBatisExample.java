@@ -30,6 +30,7 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import edu.eci.cvds.sampleprj.dao.mybatis.mappers.ClienteMapper;
 import edu.eci.cvds.sampleprj.dao.mybatis.mappers.ItemMapper;
 import edu.eci.cvds.sampleprj.dao.mybatis.mappers.TipoItemMapper;
+import edu.eci.cvds.sampleprj.dao.mybatis.mappers.ItemRentadoMapper;
 import edu.eci.cvds.samples.entities.Item;
 import edu.eci.cvds.samples.entities.TipoItem;
 
@@ -70,23 +71,57 @@ public class MyBatisExample {
         //Crear el mapper y usarlo: 
         //ClienteMapper cm=sqlss.getMapper(ClienteMapper.class)
         //cm...
-		
-		try(SqlSession sqlss = sessionfact.openSession();){
-			ClienteMapper cm=sqlss.getMapper(ClienteMapper.class);
+        
+        try(SqlSession sqlss = sessionfact.openSession();){
+            ClienteMapper cm=sqlss.getMapper(ClienteMapper.class);
             ItemMapper itemMapper = sqlss.getMapper(ItemMapper.class);
             TipoItemMapper tipoItemMapper = sqlss.getMapper(TipoItemMapper.class);
+            ItemRentadoMapper iRMapper = sqlss.getMapper(ItemRentadoMapper.class);
+
+            /**CONSULTAR CLIENTES */
+            System.out.println("------------------------------------------------\n");
+            System.out.println(cm.consultarClientes());
+
+            /**CONSULTAR CLIENTE */
+            System.out.println("------------------------------------------------\n");
+            System.out.println(cm.consultarCliente(5));
+
+            /** CONSULTAR ITEMS */
+            System.out.println("------------------------------------------------\n");
+            System.out.println(itemMapper.consultarItems());
+
+            /** CONSULTAR ITEM */
+            System.out.println("------------------------------------------------\n");
+            System.out.println(itemMapper.consultarItem(21677088));
+
+            /**CONSULTAR TIPOS ITEMS */
+            System.out.println("------------------------------------------------\n");
+            System.out.println(tipoItemMapper.getTiposItems());
+
+            /**CONSULTAR TIPO ITEM */
+            System.out.println("------------------------------------------------\n");
+            System.out.println(tipoItemMapper.getTipoItem(2143447));
+
+            /**CONSULTAR ITEMS RENTADOS */
+            System.out.println("------------------------------------------------\n");
+            System.out.println(iRMapper.totalItemsRentados());
+            
+            /** AGREGAR TIPO ITEM */
+            //tipoItemMapper.addTipoItem("La Lechona Mecanica");
+
+            //TipoItem tipo = tipoItemMapper.getTipoItem(2143447);
+            //itemMapper.insertarItem(new Item(tipo,21677088, "CR7", "SIUUUUU", new Date(), 99999, "FORMATORENTA", "GOAT"));
+            //cm.agregarItemRentadoACliente(1, 21677088, new Date(), new Date());
+
+            sqlss.commit();
         
         
-        
-        sqlss.commit();
-        
-        
-        sqlss.close();
+            sqlss.close();
+
 
         }catch(Exception e){
                 e.printStackTrace();
         }        
-        
         
     }
 
