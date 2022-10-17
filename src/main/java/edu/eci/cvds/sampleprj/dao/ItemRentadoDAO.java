@@ -1,6 +1,6 @@
 package edu.eci.cvds.sampleprj.dao;
 
-import edu.eci.cvds.sampleprj.entities.ItemRentado;
+import edu.eci.cvds.samples.entities.ItemRentado;
 import java.util.List;
 
 public interface ItemRentadoDAO {

@@ -1,9 +1,11 @@
 package edu.eci.cvds.samples.services.impl; 
 import com.google.inject.Inject; 
 import com.google.inject.Singleton; 
-import edu.eci.cvds.sampleprj.dao.ClienteDAO; 
+import edu.eci.cvds.sampleprj.dao.ClienteDAO;
 import edu.eci.cvds.sampleprj.dao.ItemDAO; 
-import edu.eci.cvds.sampleprj.dao.PersistenceException; 
+import edu.eci.cvds.sampleprj.dao.PersistenceException;
+import edu.eci.cvds.sampleprj.dao.TipoItemDAO;
+import edu.eci.cvds.sampleprj.dao.ItemRentadoDAO;
 import edu.eci.cvds.samples.entities.Cliente; 
 import edu.eci.cvds.samples.entities.Item; 
 import edu.eci.cvds.samples.entities.ItemRentado; 
@@ -14,7 +16,7 @@ import java.sql.Date;
 import java.util.List; 
 
 @Singleton 
-public class ServiciosAlquilerImpl implements ServiciosAlquiler { 
+public class ServiciosAlquilerItemsImpl implements ServiciosAlquiler {
 
 	@Inject 
 	private ItemDAO itemDAO; 
@@ -28,7 +30,7 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
 	@Inject 
 	private ItemRentadoDAO itemRentadoDAO; 
 	
-	private static final MULTADIARIA = 5000;
+	private static final int MULTADIARIA = 5000;
 
 
 

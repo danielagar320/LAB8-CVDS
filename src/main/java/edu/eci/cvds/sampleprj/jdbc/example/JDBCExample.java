@@ -31,58 +31,56 @@ import java.util.logging.Logger;
  * @author hcadavid
  */
 public class JDBCExample {
-    
+
     public static void main(String args[]){
         try {
             String url="jdbc:mysql://desarrollo.is.escuelaing.edu.co:3306/bdprueba";
             String driver="com.mysql.jdbc.Driver";
             String user="bdprueba";
             String pwd="prueba2019";
-                        
+
             Class.forName(driver);
             Connection con=DriverManager.getConnection(url,user,pwd);
             con.setAutoCommit(false);
-                 
-            
+
+
             System.out.println("Valor total pedido 1:"+valorTotalPedido(con, 1));
-            
+
             List<String> prodsPedido=nombresProductosPedido(con, 1);
-            
-            
+
+
             System.out.println("Productos del pedido 1:");
             System.out.println("-----------------------");
             for (String nomprod:prodsPedido){
                 System.out.println(nomprod);
             }
             System.out.println("-----------------------");
-            
-            
-            int suCodigoECI=20134423;
-            registrarNuevoProducto(con, suCodigoECI, "SU NOMBRE", 99999999);            
+
+
+            int suCodigoECI=2165481;
+            registrarNuevoProducto(con, suCodigoECI, "Gabriela", 1000000);
             con.commit();
-                        
-            
+
+
             con.close();
-                                   
+
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(JDBCExample.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
     }
-    
+
     /**
      * Agregar un nuevo producto con los parámetros dados
      * @param con la conexión JDBC
      * @param codigo
      * @param nombre
      * @param precio
-     * @throws SQLException 
+     * @throws SQLException
      */
     public static void registrarNuevoProducto(Connection con, int codigo, String nombre,int precio) throws SQLException{
+        String createProduct = "INSERT INTO ORD_PRODUCTOS VALUES(?,?,?)";
         //Crear preparedStatement
-        String createProduct = "INSERT INTO ORD_PRODUCTOS VALUES(?, ?, ?)";
-        try(PreparedStatement statement = con.prepareStatement(createProduct)){
+        try(PreparedStatement statement = con.prepareStatement(createProduct)) {
             //Asignar parámetros
             statement.setInt(1, codigo);
             statement.setString(2, nombre);
@@ -90,46 +88,43 @@ public class JDBCExample {
             //usar 'execute'
             statement.execute();
             con.commit();
-        } catch (Exception e){
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
         con.commit();
+
     }
-    
+
     /**
      * Consultar los nombres de los productos asociados a un pedido
      * @param con la conexión JDBC
      * @param codigoPedido el código del pedido
-     * @return 
+     * @return
      */
     public static List<String> nombresProductosPedido(Connection con, int codigoPedido){
         List<String> np=new LinkedList<>();
-
         String query = "SELECT * from ORD_PRODUCTOS join ORD_DETALLE_PEDIDO ON (ORD_DETALLE_PEDIDO.pedido_fk = ORD_PRODUCTOS.codigo) WHERE ORD_PRODUCTOS.codigo = ?";
         //Crear prepared statement
-        try(PreparedStatement statement = con.prepareStatement(query)) {
+        try (PreparedStatement nombresPedidos = con.prepareStatement(query)) {
             //asignar parámetros
-            nombresPedido.setInt(1, codigoPedido);
-
+            nombresPedidos.setInt(1, codigoPedido);
             //usar executeQuery
-            Result rs = nombresPedidos.executeQuery();
-
+            ResultSet rs = nombresPedidos.executeQuery();
             //Sacar resultados del ResultSet
-            while (rs.next()) {
+            while(rs.next()){
                 String name = rs.getString("nombre");
-
-            //Llenar la lista y retornarla
-
+                //Llenar la lista y retornarla
                 np.add(name);
             }
-        }catch(SQL.Exception e){
+        } catch(SQLException e){
             System.out.println("El dato ya existe en la base de datos");
         }
-        
         return np;
     }
 
-    
+
     /**
      * Calcular el costo total de un pedido
      * @param con
@@ -138,27 +133,21 @@ public class JDBCExample {
      */
     public static int valorTotalPedido(Connection con, int codigoPedido){
         int value = 0;
-        String query = "SELECT SUM(ORD_PRODUCTOS.precio * ORD_DETALLE.PEDIDO.cantidad) AS res FROM ORD_DETAL";
-        
+        String query = "SELECT SUM(ORD_PRODUCTOS.precio * ORD_DETALLE_PEDIDO.cantidad) AS res FROM ORD_DETALLE_PEDIDO JOIN ORD_PRODUCTOS ON ORD_PRODUCTOS.codigo = ORD_DETALLE_PEDIDO.producto_fk WHERE ORD_DETALLE_PEDIDO.pedido_fk = ?";
+
         //Crear prepared statement
-        try(PreparedStatement statement = con.prepareStatement(query)) {
+        try(PreparedStatement statement = con.prepareStatement(query)){
             //asignar parámetros
-            nombresPedido.setInt(1, codigoPedido);
+            statement.setInt(1, codigoPedido);
             //usar executeQuery
             ResultSet res = statement.executeQuery();
-            
             //Sacar resultado del ResultSet
-            while (res.next()) {
+            while(res.next()){
                 value = res.getInt("res");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return value;
     }
-    
-
-    
-    
-    
 }
